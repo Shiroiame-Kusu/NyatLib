@@ -1,0 +1,13 @@
+name: NyatLib
+version: '${project.version}'
+depend:
+  - ProtocolLib
+commands:
+  nlreload:
+    description: Reload This Stupid Plugin.
+main: icu.nyat.kusunoki.NyatLib
+api-version: 1.17
+load: STARTUP
+authors: [ Shiroame_Kusu ]
+description: A Plugin Lib of Kusunoki
+website: https://nyat.icu
