@@ -3,6 +3,7 @@ package icu.nyat.kusunoki;
 import icu.nyat.kusunoki.utils.NyatLibLogger;
 import icu.nyat.kusunoki.utils.ReloadCmd;
 import icu.nyat.kusunoki.packet.*;
+import icu.nyat.kusunoki.utils.HttpUtil;
 import icu.nyat.kusunoki.utils.NyatLibYAMLPraser;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -44,24 +45,22 @@ public final class NyatLib extends JavaPlugin {
         instance = this;
         NyatLibInit.init();
         NyatLibLogger.logINFO("§3Powered By " + author);
-        NyatLibLogger.logINFO("Website: " + website);
+        NyatLibLogger.logINFO("§3Website: " + website);
         isProtocolLibInstalled = getServer().getPluginManager().isPluginEnabled("ProtocolLib");
         InputStream subversion = getResource("subversion.yml");
         String SubMCVersion = getStringByInputStream(subversion);
         //String SubMCVersion = NyatLibYAMLPraser.getYmlValue(subversionpath,"subversion");
         //Yaml yaml = new Yaml();
         //String SubMCVersion = yaml.load(getClass().getClassLoader().getResourceAsStream("subversion.yml"));
-        if (isProtocolLibInstalled) {
-            NyatLibLogger.logWARN("Seems that you did not install ProtocolLib.");
-            NyatLibLogger.logWARN("NyatLib will still try to start but may causes some issues.");
-        } else {
-            NyatLibLogger.logINFO("Seems that you have installed ProtocolLib, continue...");
-        }
-        //System.out.println(SubMCVersion);
+        NyatLibLogger.logINFO("Seems that you have installed ProtocolLib, continue...");
+        NyatLibLogger.logINFO("Check for network access......");
+        String Hitokoto = new HttpUtil().GetHttpResponseBody("https://v1.hitokoto.cn/?encode=text&charset=utf-8&max_length=20");
+        NyatLibLogger.logINFO("Daily Saying from Hitokoto: " + Hitokoto);
+        NyatLibLogger.logINFO("§3Current NyatWork Version is: " + SubMCVersion);
         ProtocolManager manager = ProtocolLibrary.getProtocolManager();
 
         try{
-            brandUpdater = new NyatLibCore(this, Collections.singletonList("Nyatwork " + SubMCVersion),100,manager);
+            brandUpdater = new NyatLibCore(this, Collections.singletonList("§bNyatwork §d" + SubMCVersion + "§f"),100,manager);
         } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException e) {
             NyatLibLogger.logERROR(e.getMessage());
             onDisable();

@@ -6,7 +6,7 @@
 
     <groupId>icu.nyat.Kusunoki</groupId>
     <artifactId>NyatLib</artifactId>
-    <version>0.2.0-Beta.1</version>
+    <version>0.3.0-Beta.1</version>
 
     <packaging>jar</packaging>
 
@@ -16,7 +16,7 @@
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <mc.subversion>1.20.0-Pre1</mc.subversion>
+        <mc.subversion>1.20.0 Pre1</mc.subversion>
     </properties>
     <url>https://nyat.icu</url>
 
@@ -137,6 +137,18 @@
             <artifactId>bstats-bukkit</artifactId>
             <version>3.0.0</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpcore</artifactId>
+            <version>4.4.16</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.14</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>
