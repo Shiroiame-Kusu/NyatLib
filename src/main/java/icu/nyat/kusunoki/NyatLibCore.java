@@ -2,7 +2,9 @@ package icu.nyat.kusunoki;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolManager;
+import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.injector.netty.WirePacket;
+import com.comphenix.protocol.wrappers.MinecraftKey;
 import icu.nyat.kusunoki.utils.NyatLibLogger;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -11,6 +13,7 @@ import io.netty.buffer.Unpooled;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -21,75 +24,72 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 public class NyatLibCore {
+    private final NyatLib plugin;
     private final List<String> brand;
     private final long period;
-    private final Class<?> pdscl;
+
+    public final Class<?> class_PacketDataSerializer;
+    public final Constructor<?> constructor_PacketPlayOutCustomPayload;
+    public final Object instance_MinecraftKey_Brand;
+
     private final ProtocolManager manager;
     private int index = 0;
-    private ScheduledFuture<?> task;
+    private BukkitTask task;
 
-    public NyatLibCore(List brand, long period, ProtocolManager manager) throws ClassNotFoundException {
+    public NyatLibCore(NyatLib plugin, List<String> brand, long period, ProtocolManager manager) throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException {
+        this.plugin = plugin;
+
         this.brand = brand;
         this.period = period;
         this.manager = manager;
 
-        this.pdscl = Class.forName("net.minecraft.network.PacketDataSerializer");
+        this.class_PacketDataSerializer = Class.forName("net.minecraft.network.PacketDataSerializer");
+        Class<?> class_PacketPlayOutCustomPayload = Class.forName("net.minecraft.network.protocol.game.PacketPlayOutCustomPayload");
+
+        this.constructor_PacketPlayOutCustomPayload = class_PacketPlayOutCustomPayload.getConstructors()[0];
+        this.instance_MinecraftKey_Brand = class_PacketPlayOutCustomPayload.getField("a").get(null);
+
+        this.broadcast();
+        this.start();
     }
 
     public void start() {
-        task = Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(new UpdateBrandTask(), period, period, TimeUnit.MILLISECONDS);
+        task = Bukkit.getServer().getScheduler().runTaskTimer(this.plugin, new UpdateBrandTask(), period, period);
     }
 
     public void stop() {
-        if (task != null) task.cancel(true);
-    }
-
-    public int size() {
-        return brand.size();
+        if (task != null) task.cancel();
     }
 
     public void broadcast() {
-        Bukkit.getOnlinePlayers().forEach(this::send);
+        if (Bukkit.getOnlinePlayers().isEmpty()) {
+            return;
+        }
+
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            setPlayerBrand(player, brand.get(index));
+        }
     }
 
-    public void send(Player player){
-        /*String str = brand.get(index)
-                .replace("{name}", player.getName())
-                .replace("{displayname}", player.getDisplayName());*/
+    public Object createPacketDataSerializer(String arg) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        byte[] bytes = arg.getBytes();
+        ByteBuf byteBuf = Unpooled.buffer(bytes.length + 1);
+        byteBuf.writeByte(bytes.length);
+        byteBuf.writeBytes(bytes);
+        return this.class_PacketDataSerializer.getConstructor(ByteBuf.class).newInstance(byteBuf);
+    }
 
-        ByteBuf pds = (ByteBuf) getPacketDataSerializer();
-        if (pds == null) return;
-        writeString(pds, NyatLib.BRAND);
-        //writeString(pds, Chat.getTranslated(str + "&r"));
+    public Object createPacketPlayOutCustomPayload(String arg) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        return this.constructor_PacketPlayOutCustomPayload.newInstance(this.instance_MinecraftKey_Brand, this.createPacketDataSerializer(arg));
+    }
 
-        byte[] data = new byte[pds.readableBytes()];
-        for (int i = 0; i < data.length; i++) data[i] = pds.getByte(i);
-
-        WirePacket customPacket = new WirePacket(PacketType.Play.Server.CUSTOM_PAYLOAD, data);
-
+    public void setPlayerBrand(Player player, String brand) {
         try {
-            manager.sendWirePacket(player, customPacket);
-        } catch (Exception e) {
-
-            //throw new InvocationTargetException(null);
+            PacketContainer packet = new PacketContainer(PacketType.Play.Server.CUSTOM_PAYLOAD, createPacketPlayOutCustomPayload(brand));
+            manager.sendServerPacket(player, packet);
+        } catch (InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException e) {
             NyatLibLogger.logERROR(e.getMessage());
-        }
-    }
-
-    private Object getPacketDataSerializer() {
-        try {
-            Constructor<?> pdsco = pdscl.getConstructor(ByteBuf.class);
-            return pdsco.newInstance(Unpooled.buffer());
-        } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
-            return null;
-        }
-    }
-
-    private void writeString(Object buf, String data) {
-        try {
-            Method writeString = pdscl.getDeclaredMethod("a", String.class);
-            writeString.invoke(buf, data);
-        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException ignored) {
+            NyatLibLogger.logINFO("flag");
         }
     }
 

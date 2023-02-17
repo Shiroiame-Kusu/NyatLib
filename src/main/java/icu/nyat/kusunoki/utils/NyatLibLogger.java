@@ -8,9 +8,9 @@ import  java.util.logging.Level;
 
 import org.bukkit.ChatColor;
 import org.bukkit.event.server.*;
-public interface NyatLibLogger {
+public class NyatLibLogger {
     //public Level.ERROR = new Level("");
-    Plugin plugin = NyatLib.getPlugin(NyatLib.class);
+    public static final Plugin plugin = NyatLib.getPlugin(NyatLib.class);
     public static void logINFO(String log) {
         plugin.getLogger().log(Level.INFO, log);
     }
