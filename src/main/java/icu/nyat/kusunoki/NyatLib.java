@@ -22,24 +22,31 @@ import static org.bukkit.Bukkit.getServer;
 
 public final class NyatLib extends JavaPlugin {
 
+    private static NyatLib Main;
     private String version = this.getDescription().getVersion().toString();
     //public String author = this.getDescription().getAuthors().toString();
     //public String website = this.getDescription().getWebsite().toString();
     private NyatLibCore brandUpdater;
     //public boolean isProtocolLibInstalled;
-    NyatLibLogger Logger = new NyatLibLogger();
-    NyatLibInit init = new NyatLibInit();
-    NyatLib Main = new NyatLib();
+
+
     @Override
     public void onLoad(){
-        init.init();
-        Logger.logLoader("NyatLib Version:" + version);
+        NyatLibLogger Logger = new NyatLibLogger();
+        NyatLibInit LibInit = new NyatLibInit();
+        try {
+            LibInit.initial();
+            Logger.logLoader("NyatLib Version:" + version);
+        }catch (Exception ex){
+            NyatLibLogger.logERROR(ex.toString());
+        }
 
 
    }
 
    @Override
     public void onEnable(){
+       NyatLibLogger Logger = new NyatLibLogger();
        Main = this;
        NyatLibOnEnableLog ResourceFetch = new NyatLibOnEnableLog();
        try {
@@ -48,19 +55,6 @@ public final class NyatLib extends JavaPlugin {
            Logger.logERROR(e.toString());
            onDisable();
        }
-       /*Logger.logINFO("§3Powered By " + author);
-       Logger.logINFO("§3Website: " + website);
-       isProtocolLibInstalled = getServer().getPluginManager().isPluginEnabled("ProtocolLib");
-       InputStream subversion = getResource("subversion.yml");
-       String SubMCVersion = getStringByInputStream(subversion);
-       //String SubMCVersion = NyatLibYAMLPraser.getYmlValue(subversionpath,"subversion");
-       //Yaml yaml = new Yaml();
-       //String SubMCVersion = yaml.load(getClass().getClassLoader().getResourceAsStream("subversion.yml"));
-       Logger.logINFO("Seems that you have installed ProtocolLib, continue...");
-       Logger.logINFO("Check for network access......");
-       String Hitokoto = new HttpUtil().GetHttpResponseBody("https://v1.hitokoto.cn/?encode=text&charset=utf-8&max_length=20");
-       Logger.logINFO("Daily Saying from Hitokoto: " + Hitokoto);
-       Logger.logINFO("§3Current NyatWork Version is: " + SubMCVersion);*/
        ProtocolManager manager = ProtocolLibrary.getProtocolManager();
 
        try{
