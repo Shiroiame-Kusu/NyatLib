@@ -1,5 +1,7 @@
-package icu.nyat.kusunoki;
+package icu.nyat.kusunoki.packet;
 
+import icu.nyat.kusunoki.NyatLib;
+import icu.nyat.kusunoki.NyatLibCore;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
