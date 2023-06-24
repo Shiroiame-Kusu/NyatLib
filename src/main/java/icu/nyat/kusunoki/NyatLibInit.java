@@ -4,7 +4,7 @@ package icu.nyat.kusunoki;
 import icu.nyat.kusunoki.utils.NyatLibLogger;
 
 public class NyatLibInit {
-    public static void init(){
+    public void initial(){
         NyatLibLogger.logINFO("==========================================================================================");
         NyatLibLogger.logINFO("");
         NyatLibLogger.logINFO("@@@@@@^    @@@@^                              =@@@@^    =@@@@^        @@@@@  =@@@@");
