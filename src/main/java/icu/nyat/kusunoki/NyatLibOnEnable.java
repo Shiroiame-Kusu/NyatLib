@@ -1,6 +1,5 @@
 package icu.nyat.kusunoki;
 
-import icu.nyat.kusunoki.NyatLib;
 import icu.nyat.kusunoki.utils.HttpUtil;
 import icu.nyat.kusunoki.utils.NyatLibLogger;
 
@@ -10,9 +9,8 @@ import static icu.nyat.kusunoki.utils.NyatLibYAMLPraser.getStringByInputStream;
 import static org.bukkit.Bukkit.getServer;
 
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.java.JavaPlugin;
 
-public class NyatLibOnEnableLog {
+public class NyatLibOnEnable {
     public static final Plugin plugin = NyatLib.getPlugin(NyatLib.class);
     private String author = plugin.getDescription().getVersion();
     private String website = plugin.getDescription().getWebsite();
