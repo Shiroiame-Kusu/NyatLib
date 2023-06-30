@@ -72,5 +72,6 @@ public final class NyatLib extends JavaPlugin {
     public void onDisable() {
         // Plugin shutdown logic
         brandUpdater.stop();
+        NyatLibOnDisable.DisableStep();
     }
 }

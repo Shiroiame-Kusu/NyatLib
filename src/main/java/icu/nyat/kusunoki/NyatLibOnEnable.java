@@ -17,7 +17,6 @@ public class NyatLibOnEnable {
     public static String SubMCVersion;
 
     public boolean isProtocolLibInstalled;
-    public String ProtocolLibVersion;
     NyatLibLogger Logger = new NyatLibLogger();
     public void Fetch(){
         Logger.logINFO("§3Powered By " + author);
