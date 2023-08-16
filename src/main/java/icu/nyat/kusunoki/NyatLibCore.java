@@ -13,7 +13,9 @@ import io.netty.buffer.Unpooled;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
+import io.papermc.lib.PaperLib;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -23,7 +25,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-public class NyatLibCore {
+public class NyatLibCore extends BukkitRunnable{
     private final NyatLib plugin;
     private final List<String> brand;
     private final long period;
@@ -35,6 +37,7 @@ public class NyatLibCore {
     private final ProtocolManager manager;
     private int index = 0;
     private BukkitTask task;
+
 
     public NyatLibCore(NyatLib plugin, List<String> brand, long period, ProtocolManager manager) throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException {
         this.plugin = plugin;
@@ -49,12 +52,32 @@ public class NyatLibCore {
         this.constructor_PacketPlayOutCustomPayload = class_PacketPlayOutCustomPayload.getConstructors()[0];
         this.instance_MinecraftKey_Brand = class_PacketPlayOutCustomPayload.getField("a").get(null);
 
+
+    }
+
+    @Override
+    public void run() {
         this.broadcast();
         this.start();
     }
 
     public void start() {
-        task = Bukkit.getServer().getScheduler().runTaskTimer(this.plugin, new UpdateBrandTask(), period, period);
+        System.out.println(Bukkit.getServer().getName());
+        if(Bukkit.getServer().getName().equals("Folia")){
+            BukkitRunnable runnable = new BukkitRunnable() {
+                @Override
+                public void run() {
+                    new UpdateBrandTask();
+                }
+            };
+            runnable.runTaskTimer(this.plugin,period,period);
+
+        }else{
+            task = Bukkit.getServer().getScheduler().runTaskTimer(this.plugin, new UpdateBrandTask(), period, period);
+        }
+
+
+
     }
 
     public void stop() {

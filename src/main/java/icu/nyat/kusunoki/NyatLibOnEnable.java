@@ -24,7 +24,7 @@ public class NyatLibOnEnable {
         isProtocolLibInstalled = getServer().getPluginManager().isPluginEnabled("ProtocolLib");
         String ProtocolLibVersionDescription = getServer().getPluginManager().getPlugin("ProtocolLib").toString();
         String ProtocolLibVersion = ProtocolLibVersionDescription.substring(ProtocolLibVersionDescription.length() - 5);
-        if(ProtocolLibVersion.equals("5.0.0")){
+        if(ProtocolLibVersion.equals("5.1.0")){
             Logger.logINFO("Seems that you have installed correct ProtocolLib version, continue...");
         }else{
             Logger.logWARN("You are using an untested ProtocolLib version!");
@@ -32,12 +32,15 @@ public class NyatLibOnEnable {
         InputStream subversion = plugin.getResource("subversion.yml");
         String SubMCVersion = getStringByInputStream(subversion);
         Logger.logINFO("Check for network access......");
-        String Hitokoto = new HttpUtil().get("https://v1.hitokoto.cn/?encode=text&charset=utf-8&max_length=20");
-        if(Hitokoto == null){
-            Logger.logWARN("Cannot connect to Internet, Please check your network connection!");
-        }else{
-            Logger.logINFO("Daily Saying from Hitokoto: " + Hitokoto);
-        }
+        Thread FetchHitokoto = new Thread(() -> {
+            String Hitokoto = new HttpUtil().get("https://v1.hitokoto.cn/?encode=text&charset=utf-8&max_length=20");
+            if(Hitokoto == null){
+                Logger.logWARN("Cannot connect to Internet, Please check your network connection!");
+            }else{
+                Logger.logINFO("Daily Saying from Hitokoto: " + Hitokoto);
+            }
+        });
+
         Logger.logINFO("§3Current NyatWork Version is: " + SubMCVersion);
     }
 }
