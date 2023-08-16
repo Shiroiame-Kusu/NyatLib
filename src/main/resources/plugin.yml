@@ -1,3 +1,4 @@
+folia-supported: true
 name: NyatLib
 version: '${project.version}'
 depend:
