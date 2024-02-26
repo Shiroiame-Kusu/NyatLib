@@ -10,7 +10,6 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 
 
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -47,8 +46,7 @@ public class NyatLibCore extends BukkitRunnable{
         this.manager = manager;
 
         this.class_PacketDataSerializer = Class.forName("net.minecraft.network.PacketDataSerializer");
-        Class<?> class_PacketPlayOutCustomPayload = Class.forName("net.minecraft.network.protocol.game.PacketPlayOutCustomPayload");
-
+        Class<?> class_PacketPlayOutCustomPayload = Class.forName("net.minecraft.network.packet.PacketPlayOutCustomPayload");
         this.constructor_PacketPlayOutCustomPayload = class_PacketPlayOutCustomPayload.getConstructors()[0];
         this.instance_MinecraftKey_Brand = class_PacketPlayOutCustomPayload.getField("a").get(null);
 

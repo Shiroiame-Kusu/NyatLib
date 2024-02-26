@@ -7,6 +7,8 @@ import icu.nyat.kusunoki.packet.PlayerListener;
 import icu.nyat.kusunoki.motd.PingEventPaper;
 import icu.nyat.kusunoki.motd.PingEventSpigot;
 import io.papermc.lib.PaperLib;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
@@ -14,9 +16,14 @@ import com.comphenix.protocol.ProtocolManager;
 import java.util.Collections;
 
 public final class NyatLib extends JavaPlugin {
-    private static NyatLib Main;
-    private String version = this.getDescription().getVersion().toString();
+
+
+    private String PluginVersion = this.getDescription().getVersion();
     private NyatLibCore brandUpdater;
+
+    public static String BrandName;
+    public static String BrandVersion;
+    public static String BrandSubVersion;
 
     @Override
     public void onLoad(){
@@ -24,37 +31,40 @@ public final class NyatLib extends JavaPlugin {
         NyatLibInit LibInit = new NyatLibInit();
         try {
             LibInit.initial();
-            Logger.logLoader("NyatLib Version:" + version);
+            Logger.logLoader("NyatLib Version:" + PluginVersion);
         }catch (Exception ex){
             NyatLibLogger.logERROR(ex.toString());
         }
-
-
    }
 
    @Override
     public void onEnable(){
        NyatLibLogger Logger = new NyatLibLogger();
-       Main = this;
        NyatLibOnEnable ResourceFetch = new NyatLibOnEnable();
+       FileConfiguration config = getConfig();
+       NyatLib.BrandName = config.getString("default.ServerName");
+       NyatLib.BrandVersion = config.getString("default.ServerVersion");
+       NyatLib.BrandSubVersion = config.getString("default.ServerProtocolVersion");
        try {
            ResourceFetch.Fetch();
        }catch(Exception e){
-           Logger.logERROR(e.toString());
+           NyatLibLogger.logERROR(e.toString());
            onDisable();
        }
        ProtocolManager manager = ProtocolLibrary.getProtocolManager();
 
        try{
-           brandUpdater = new NyatLibCore(this, Collections.singletonList("§bNyatwork §d" + ResourceFetch.SubMCVersion + "§f"),100,manager);
-       } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException e) {
+           brandUpdater = new NyatLibCore(this, Collections.singletonList(BrandName + " " + BrandVersion + "§f"),100,manager);
+       } catch (Exception e) {
            NyatLibLogger.logERROR(e.getMessage());
+           NyatLibLogger.logERROR(e.toString());
            onDisable();
-           return;
        }
 
        manager.addPacketListener(new PacketListener(this, brandUpdater));
-       this.getCommand("nlreload").setExecutor(new ReloadCmd(this));
+       try {
+           this.getCommand("nlreload").setExecutor(new ReloadCmd(this));
+       }catch (Exception ignored){}
 
        new PlayerListener(this, this.brandUpdater).register();
        NyatLib plugin = NyatLib.getPlugin(NyatLib.class);
@@ -71,7 +81,9 @@ public final class NyatLib extends JavaPlugin {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
-        brandUpdater.stop();
+        if(brandUpdater != null){
+            brandUpdater.stop();
+        }
         NyatLibOnDisable.DisableStep();
     }
 }

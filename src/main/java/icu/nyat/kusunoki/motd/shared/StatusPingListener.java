@@ -20,8 +20,7 @@ public interface StatusPingListener {
 
     default void handle(StatusPing ping) {
         Set<UUID> vanished = new HashSet<>();
-        InputStream subversion = plugin.getResource("subversion.yml");
-        String SubMCVersion = getStringByInputStream(subversion);
+        String SubMCVersion = NyatLib.BrandSubVersion;
         ping.setVersionName("Nyatwork " + SubMCVersion);
         ping.setVersionProtocol(-1);
         List<String> supportedProtocols = new ArrayList<>();
