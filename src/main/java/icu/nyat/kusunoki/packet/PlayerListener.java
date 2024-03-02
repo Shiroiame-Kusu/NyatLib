@@ -22,6 +22,6 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-        core.setPlayerBrand(event.getPlayer(),"Nyatwork");
+        core.setPlayerBrand(event.getPlayer(),NyatLib.BrandName + " " + NyatLib.BrandVersion + "§f");
     }
 }

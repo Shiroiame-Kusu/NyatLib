@@ -5,6 +5,7 @@ import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.injector.netty.WirePacket;
 import com.comphenix.protocol.wrappers.MinecraftKey;
+
 import icu.nyat.kusunoki.utils.NyatLibLogger;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -46,7 +47,9 @@ public class NyatLibCore extends BukkitRunnable{
         this.manager = manager;
 
         this.class_PacketDataSerializer = Class.forName("net.minecraft.network.PacketDataSerializer");
-        Class<?> class_PacketPlayOutCustomPayload = Class.forName("net.minecraft.network.packet.PacketPlayOutCustomPayload");
+        Class<?> class_PacketPlayOutCustomPayload = Class.forName("net.minecraft.network.protocol.game.PacketPlayOutCustomPayload");
+        //Class<?> class_PacketPlayOutCustomPayload = Class.forName("com.comphenix.protocol.wrappers.CustomPacketPayloadWrapper");
+        //Class<?> class_PacketPlayOutCustomPayload = com.comphenix.protocol.wrappers.CustomPacketPayloadWrapper.class;
         this.constructor_PacketPlayOutCustomPayload = class_PacketPlayOutCustomPayload.getConstructors()[0];
         this.instance_MinecraftKey_Brand = class_PacketPlayOutCustomPayload.getField("a").get(null);
 

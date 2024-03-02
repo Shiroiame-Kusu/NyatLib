@@ -13,6 +13,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
 public final class NyatLib extends JavaPlugin {
@@ -23,7 +25,9 @@ public final class NyatLib extends JavaPlugin {
 
     public static String BrandName;
     public static String BrandVersion;
-    public static String BrandSubVersion;
+    public static int BrandProtocolVersion;
+    public static ArrayList<Integer> ServerSupportedProtocolVersion;
+    public static boolean EnableBoardcast;
 
     @Override
     public void onLoad(){
@@ -44,7 +48,8 @@ public final class NyatLib extends JavaPlugin {
        FileConfiguration config = getConfig();
        NyatLib.BrandName = config.getString("default.ServerName");
        NyatLib.BrandVersion = config.getString("default.ServerVersion");
-       NyatLib.BrandSubVersion = config.getString("default.ServerProtocolVersion");
+       NyatLib.BrandProtocolVersion = (int)config.get("default.ServerProtocolVersion");
+       NyatLib.ServerSupportedProtocolVersion = (ArrayList<Integer>) config.get("default.ServerSupportedProtocolVersion");
        try {
            ResourceFetch.Fetch();
        }catch(Exception e){
@@ -54,10 +59,13 @@ public final class NyatLib extends JavaPlugin {
        ProtocolManager manager = ProtocolLibrary.getProtocolManager();
 
        try{
-           brandUpdater = new NyatLibCore(this, Collections.singletonList(BrandName + " " + BrandVersion + "§f"),100,manager);
+           if(EnableBoardcast){
+               brandUpdater = new NyatLibCore(this, Collections.singletonList(BrandName + " " + BrandVersion + "§f"),100,manager);
+           }
        } catch (Exception e) {
            NyatLibLogger.logERROR(e.getMessage());
            NyatLibLogger.logERROR(e.toString());
+           e.printStackTrace();
            onDisable();
        }
 

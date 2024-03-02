@@ -13,7 +13,7 @@ import org.bukkit.plugin.Plugin;
 
 public class NyatLibOnEnable {
     public static final Plugin plugin = NyatLib.getPlugin(NyatLib.class);
-    private final String author = plugin.getDescription().getVersion();
+    private final String author = plugin.getDescription().getAuthors().get(0);
     private final String website = plugin.getDescription().getWebsite();
     public static String SubMCVersion;
 
@@ -44,7 +44,7 @@ public class NyatLibOnEnable {
                 }
             });
 
-            Logger.logINFO("§3Current NyatWork Version is: " + NyatLib.BrandSubVersion);
+            Logger.logINFO("§3Current NyatWork Version is: " + NyatLib.BrandVersion  + "§f");
 
         }else{
             plugin.onDisable();

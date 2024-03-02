@@ -15,29 +15,25 @@ import org.bukkit.plugin.Plugin;
 
 public interface StatusPingListener {
 
-    public static final Plugin plugin = NyatLib.getPlugin(NyatLib.class);
-    String afterIcon = "                                                                            ";
-
+    Plugin plugin = NyatLib.getPlugin(NyatLib.class);
     default void handle(StatusPing ping) {
-        Set<UUID> vanished = new HashSet<>();
-        String SubMCVersion = NyatLib.BrandSubVersion;
-        ping.setVersionName("Nyatwork " + SubMCVersion);
-        ping.setVersionProtocol(-1);
-        List<String> supportedProtocols = new ArrayList<>();
+        ping.setVersionName("Nyatwork " + NyatLib.BrandVersion);
+        ping.setVersionProtocol(NyatLib.BrandProtocolVersion);
+        List<Integer> supportedProtocols = new ArrayList<>();
 
         try {
-            supportedProtocols.add("-1");
+            NyatLib.ServerSupportedProtocolVersion.add(NyatLib.BrandProtocolVersion);
         }catch (Exception ex){
             NyatLibLogger.logERROR(ex.toString());
         }
 
-        if (!supportedProtocols.isEmpty()) {
-            List<Integer> protocols = supportedProtocols.stream().map(Integer::parseInt).collect(Collectors.toList());
+        if (!NyatLib.ServerSupportedProtocolVersion.isEmpty()) {
+            List<Integer> protocols = NyatLib.ServerSupportedProtocolVersion.stream().toList();
 
             if (protocols.contains(ping.getClientProtocol())) {
                 ping.setVersionProtocol(ping.getClientProtocol());
             } else {
-                ping.setVersionProtocol(-1);
+                ping.setVersionProtocol(NyatLib.BrandProtocolVersion);
             }
         }
     }
