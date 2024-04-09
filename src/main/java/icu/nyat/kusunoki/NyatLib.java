@@ -18,16 +18,14 @@ import java.util.Arrays;
 import java.util.Collections;
 
 public final class NyatLib extends JavaPlugin {
-
-
+    public static final String BRAND = "minecraft:brand";
     private String PluginVersion = this.getDescription().getVersion();
     private NyatLibCore brandUpdater;
-
     public static String BrandName;
     public static String BrandVersion;
     public static int BrandProtocolVersion;
     public static ArrayList<Integer> ServerSupportedProtocolVersion;
-    public static boolean EnableBoardcast;
+    public static boolean EnableBroadcast;
 
     @Override
     public void onLoad(){
@@ -50,6 +48,7 @@ public final class NyatLib extends JavaPlugin {
        NyatLib.BrandVersion = config.getString("default.ServerVersion");
        NyatLib.BrandProtocolVersion = (int)config.get("default.ServerProtocolVersion");
        NyatLib.ServerSupportedProtocolVersion = (ArrayList<Integer>) config.get("default.ServerSupportedProtocolVersion");
+       NyatLib.EnableBroadcast = config.getBoolean("default.EnableBroadcast");
        try {
            ResourceFetch.Fetch();
        }catch(Exception e){
@@ -59,8 +58,9 @@ public final class NyatLib extends JavaPlugin {
        ProtocolManager manager = ProtocolLibrary.getProtocolManager();
 
        try{
-           if(EnableBoardcast){
-               brandUpdater = new NyatLibCore(this, Collections.singletonList(BrandName + " " + BrandVersion + "§f"),100,manager);
+           NyatLibLogger.logINFO(EnableBroadcast ? "true" : "false");
+           if(EnableBroadcast){
+               brandUpdater = new NyatLibCore(Collections.singletonList(BrandName + " " + BrandVersion + "§f"),100,manager);
            }
        } catch (Exception e) {
            NyatLibLogger.logERROR(e.getMessage());
@@ -74,7 +74,9 @@ public final class NyatLib extends JavaPlugin {
            this.getCommand("nlreload").setExecutor(new ReloadCmd(this));
        }catch (Exception ignored){}
 
-       new PlayerListener(this, this.brandUpdater).register();
+       //new PlayerListener(this, this.brandUpdater).register();
+       if (brandUpdater.size() > 0) brandUpdater.broadcast();
+       if (brandUpdater.size() > 1) brandUpdater.start();
        NyatLib plugin = NyatLib.getPlugin(NyatLib.class);
        if (PaperLib.isPaper()) {
            getServer().getPluginManager().registerEvents(new PingEventPaper(plugin), this);

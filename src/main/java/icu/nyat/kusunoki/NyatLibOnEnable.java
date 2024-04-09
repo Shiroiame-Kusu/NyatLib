@@ -16,9 +16,8 @@ public class NyatLibOnEnable {
     private final String author = plugin.getDescription().getAuthors().get(0);
     private final String website = plugin.getDescription().getWebsite();
     public static String SubMCVersion;
-
     public boolean isProtocolLibInstalled;
-    NyatLibLogger Logger = new NyatLibLogger();
+    NyatLibLogger Logger = new  NyatLibLogger();
     public void Fetch(){
         Logger.logINFO("§3Powered By " + author);
         Logger.logINFO("§3Website: " + website);
@@ -36,6 +35,7 @@ public class NyatLibOnEnable {
 
             Logger.logINFO("Check for network access......");
             Thread FetchHitokoto = new Thread(() -> {
+
                 String Hitokoto = new HttpUtil().get("https://v1.hitokoto.cn/?encode=text&charset=utf-8&max_length=20");
                 if(Hitokoto == null){
                     Logger.logWARN("Cannot connect to Internet, Please check your network connection!");

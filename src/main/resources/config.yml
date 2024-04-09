@@ -3,4 +3,4 @@ default:
   ServerVersion: "1.21.0 Pre1"
   ServerProtocolVersion: -1
   ServerSupportedProtocolVersion: []
-  EnableBoardcast: false
+  EnableBroadcast: true
