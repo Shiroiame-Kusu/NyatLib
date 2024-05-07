@@ -4,8 +4,6 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.injector.netty.WirePacket;
-import com.comphenix.protocol.utility.MinecraftVersion;
-import com.comphenix.protocol.wrappers.MinecraftKey;
 
 import icu.nyat.kusunoki.utils.NyatLibLogger;
 import io.netty.buffer.ByteBuf;
@@ -15,8 +13,6 @@ import io.netty.buffer.Unpooled;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
-import io.papermc.lib.PaperLib;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -25,7 +21,6 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
 
 public class NyatLibCore extends BukkitRunnable{
     //private final NyatLib plugin;
@@ -64,14 +59,9 @@ public class NyatLibCore extends BukkitRunnable{
             this.instance_MinecraftKey_Brand = class_PacketPlayOutCustomPayload.getField("a").get(null);
         }catch (Exception ex){
             ex.printStackTrace();
-            NyatLibLogger.logERROR("Looks like you're using Nyatlib >= 1.20.2");
+            NyatLibLogger.logERROR("Looks like you're using Nyatlib on MC Version >= 1.20.2");
             CompatibleMode = false;
         }
-
-
-
-
-
     }
 
     @Override
@@ -81,23 +71,7 @@ public class NyatLibCore extends BukkitRunnable{
     }
 
     public void start() {
-        /*System.out.println(Bukkit.getServer().getName());
-        if(Bukkit.getServer().getName().equals("Folia")){
-            BukkitRunnable runnable = new BukkitRunnable() {
-                @Override
-                public void run() {
-                    new UpdateBrandTask();
-                }
-            };
-            runnable.runTaskTimer(this.plugin,period,period);
-
-        }else{
-            task = Bukkit.getServer().getScheduler().runTaskTimer(this.plugin, new UpdateBrandTask(), period, period);
-        }*/
         task = Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(new UpdateBrandTask(), period, period, TimeUnit.MILLISECONDS);
-
-
-
     }
 
     public void stop() {
@@ -165,9 +139,13 @@ public class NyatLibCore extends BukkitRunnable{
 
     public void setPlayerBrand(Player player, String brand) {
         try {
-            PacketContainer packet = new PacketContainer(PacketType.Play.Server.CUSTOM_PAYLOAD, createPacketPlayOutCustomPayload(brand));
-            manager.sendServerPacket(player, packet);
-        } catch (InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException e) {
+            if(CompatibleMode){
+                PacketContainer packet = new PacketContainer(PacketType.Play.Server.CUSTOM_PAYLOAD, createPacketPlayOutCustomPayload(brand));
+                manager.sendServerPacket(player, packet);
+            }else{
+                send(player);
+            }
+        } catch (Exception e) {
             NyatLibLogger.logERROR(e.getMessage());
             NyatLibLogger.logINFO("flag");
         }

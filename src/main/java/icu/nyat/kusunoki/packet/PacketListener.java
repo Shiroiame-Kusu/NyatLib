@@ -9,6 +9,7 @@ import icu.nyat.kusunoki.NyatLibCore;
 
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.MinecraftKey;
+import icu.nyat.kusunoki.utils.NyatLibLogger;
 import io.netty.buffer.ByteBuf;
 
 import java.nio.charset.StandardCharsets;
@@ -35,6 +36,8 @@ public class PacketListener extends PacketAdapter {
 
         try {
             MinecraftKey channel = packet.getMinecraftKeys().read(0);
+            String AllChannel =  channel.getFullKey();
+            NyatLibLogger.logINFO(AllChannel);
             if (channel.getFullKey().equals(NyatLib.BRAND)) {
                 event.setCancelled(true);
 

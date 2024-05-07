@@ -3,18 +3,15 @@ package icu.nyat.kusunoki;
 import icu.nyat.kusunoki.utils.NyatLibLogger;
 import icu.nyat.kusunoki.utils.ReloadCmd;
 import icu.nyat.kusunoki.packet.*;
-import icu.nyat.kusunoki.packet.PlayerListener;
 import icu.nyat.kusunoki.motd.PingEventPaper;
 import icu.nyat.kusunoki.motd.PingEventSpigot;
 import io.papermc.lib.PaperLib;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 
 public final class NyatLib extends JavaPlugin {
@@ -74,7 +71,7 @@ public final class NyatLib extends JavaPlugin {
            this.getCommand("nlreload").setExecutor(new ReloadCmd(this));
        }catch (Exception ignored){}
 
-       //new PlayerListener(this, this.brandUpdater).register();
+       new PlayerListener(this, this.brandUpdater).register();
        if (brandUpdater.size() > 0) brandUpdater.broadcast();
        if (brandUpdater.size() > 1) brandUpdater.start();
        NyatLib plugin = NyatLib.getPlugin(NyatLib.class);

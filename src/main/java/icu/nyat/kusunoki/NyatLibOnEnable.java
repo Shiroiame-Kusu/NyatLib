@@ -25,7 +25,7 @@ public class NyatLibOnEnable {
         if(isProtocolLibInstalled){
             String ProtocolLibVersionDescription = getServer().getPluginManager().getPlugin("ProtocolLib").toString();
             String ProtocolLibVersion = ProtocolLibVersionDescription.substring(ProtocolLibVersionDescription.length() - 5);
-            if(ProtocolLibVersion.equals("5.2.0")){
+            if(ProtocolLibVersion.equals("5.2.1")){
                 Logger.logINFO("Seems that you have installed correct ProtocolLib version, continue...");
             }else{
                 Logger.logWARN("You are using an untested ProtocolLib version!");
