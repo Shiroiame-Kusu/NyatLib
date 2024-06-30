@@ -6,7 +6,7 @@
 
     <groupId>icu.nyat.Kusunoki</groupId>
     <artifactId>NyatLib</artifactId>
-    <version>0.10.0-Beta.1</version>
+    <version>0.10.1-Beta.1</version>
 
     <packaging>jar</packaging>
 
@@ -16,7 +16,7 @@
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <mc.subversion>1.21.0 Pre1</mc.subversion>
+        <mc.subversion>1.22.0 Pre1</mc.subversion>
     </properties>
     <url>https://nyat.icu</url>
 
@@ -141,13 +141,13 @@
         <dependency>
             <groupId>com.comphenix.protocol</groupId>
             <artifactId>ProtocolLib</artifactId>
-            <version>5.2.0-SNAPSHOT</version>
+            <version>5.3.0-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
-            <version>4.1.105.Final</version>
+            <version>4.1.111.Final</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

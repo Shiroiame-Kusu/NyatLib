@@ -1,6 +1,6 @@
 default:
   ServerName: "§bNyatwork"
-  ServerVersion: "1.21.0 Pre1"
+  ServerVersion: "1.22.0 Pre1"
   ServerProtocolVersion: -1
   ServerSupportedProtocolVersion: []
   EnableBroadcast: true
