@@ -1,4 +1,4 @@
-package icu.nyat.kusunoki.utils;
+package icu.nyat.kusunoki.Command;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

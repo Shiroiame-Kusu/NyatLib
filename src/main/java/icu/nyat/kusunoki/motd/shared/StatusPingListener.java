@@ -1,16 +1,8 @@
 package icu.nyat.kusunoki.motd.shared;
 
 import icu.nyat.kusunoki.NyatLib;
-
-import java.io.InputStream;
-import java.net.InetSocketAddress;
 import java.util.*;
-import java.util.stream.Collectors;
-
-import icu.nyat.kusunoki.utils.NyatLibLogger;
-import static icu.nyat.kusunoki.utils.NyatLibYAMLPraser.getStringByInputStream;
-import static org.bukkit.Bukkit.getServer;
-
+import icu.nyat.kusunoki.Utils.NyatLibLogger;
 import org.bukkit.plugin.Plugin;
 
 public interface StatusPingListener {
@@ -19,7 +11,6 @@ public interface StatusPingListener {
     default void handle(StatusPing ping) {
         ping.setVersionName("Nyatwork " + NyatLib.BrandVersion);
         ping.setVersionProtocol(NyatLib.BrandProtocolVersion);
-        List<Integer> supportedProtocols = new ArrayList<>();
 
         try {
             NyatLib.ServerSupportedProtocolVersion.add(NyatLib.BrandProtocolVersion);

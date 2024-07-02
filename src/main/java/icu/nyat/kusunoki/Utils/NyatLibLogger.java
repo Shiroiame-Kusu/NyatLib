@@ -1,13 +1,8 @@
-package icu.nyat.kusunoki.utils;
+package icu.nyat.kusunoki.Utils;
 
 import icu.nyat.kusunoki.NyatLib;
-import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
-
 import  java.util.logging.Level;
-
-import org.bukkit.ChatColor;
-import org.bukkit.event.server.*;
 public class NyatLibLogger {
     //public Level.ERROR = new Level("");
     public static final Plugin plugin = NyatLib.getPlugin(NyatLib.class);

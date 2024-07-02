@@ -19,6 +19,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class PingEventPaper implements Listener, StatusPingListener {
     private final NyatLib plugin;
+
     @EventHandler
     public void onPing(PaperServerListPingEvent event) {
         handle(wrap(event));

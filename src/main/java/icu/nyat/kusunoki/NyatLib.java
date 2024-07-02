@@ -1,36 +1,37 @@
 package icu.nyat.kusunoki;
 
-import icu.nyat.kusunoki.utils.NyatLibLogger;
-import icu.nyat.kusunoki.utils.ReloadCmd;
-import icu.nyat.kusunoki.packet.*;
+import icu.nyat.kusunoki.Action.NyatLibOnDisable;
+import icu.nyat.kusunoki.Action.NyatLibOnEnable;
+import icu.nyat.kusunoki.Utils.ConfigReader;
+import icu.nyat.kusunoki.Utils.NyatLibLogger;
+import icu.nyat.kusunoki.Command.ReloadCmd;
+import icu.nyat.kusunoki.Packet.*;
 import icu.nyat.kusunoki.motd.PingEventPaper;
 import icu.nyat.kusunoki.motd.PingEventSpigot;
 import io.papermc.lib.PaperLib;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Objects;
 
 public final class NyatLib extends JavaPlugin {
     public static final String BRAND = "minecraft:brand";
     private String PluginVersion = this.getDescription().getVersion();
-    private NyatLibCore brandUpdater;
+    public static NyatLibCore brandUpdater;
     public static String BrandName;
     public static String BrandVersion;
     public static int BrandProtocolVersion;
     public static ArrayList<Integer> ServerSupportedProtocolVersion;
-    public static boolean EnableBroadcast;
+    public static boolean isBroadcastEnabled;
 
     @Override
     public void onLoad(){
-        NyatLibLogger Logger = new NyatLibLogger();
-        NyatLibInit LibInit = new NyatLibInit();
         try {
-            LibInit.initial();
-            Logger.logLoader("NyatLib Version:" + PluginVersion);
+            initial();
+            NyatLibLogger.logLoader("NyatLib Version:" + PluginVersion);
         }catch (Exception ex){
             NyatLibLogger.logERROR(ex.toString());
         }
@@ -38,16 +39,11 @@ public final class NyatLib extends JavaPlugin {
 
    @Override
     public void onEnable(){
-       NyatLibLogger Logger = new NyatLibLogger();
-       NyatLibOnEnable ResourceFetch = new NyatLibOnEnable();
-       FileConfiguration config = getConfig();
-       NyatLib.BrandName = config.getString("default.ServerName");
-       NyatLib.BrandVersion = config.getString("default.ServerVersion");
-       NyatLib.BrandProtocolVersion = (int)config.get("default.ServerProtocolVersion");
-       NyatLib.ServerSupportedProtocolVersion = (ArrayList<Integer>) config.get("default.ServerSupportedProtocolVersion");
-       NyatLib.EnableBroadcast = config.getBoolean("default.EnableBroadcast");
+       NyatLibOnEnable EnableStep = new NyatLibOnEnable();
+       ConfigReader.Read(getConfig());
        try {
-           ResourceFetch.Fetch();
+           EnableStep.Check();
+           NyatLibLogger.logINFO("§3Current NyatWork Version is: " + NyatLib.BrandVersion  + "§f");
        }catch(Exception e){
            NyatLibLogger.logERROR(e.toString());
            onDisable();
@@ -55,8 +51,7 @@ public final class NyatLib extends JavaPlugin {
        ProtocolManager manager = ProtocolLibrary.getProtocolManager();
 
        try{
-           NyatLibLogger.logINFO(EnableBroadcast ? "true" : "false");
-           if(EnableBroadcast){
+           if(isBroadcastEnabled){
                brandUpdater = new NyatLibCore(Collections.singletonList(BrandName + " " + BrandVersion + "§f"),100,manager);
            }
        } catch (Exception e) {
@@ -68,10 +63,10 @@ public final class NyatLib extends JavaPlugin {
 
        manager.addPacketListener(new PacketListener(this, brandUpdater));
        try {
-           this.getCommand("nlreload").setExecutor(new ReloadCmd(this));
+           Objects.requireNonNull(this.getCommand("nlreload")).setExecutor(new ReloadCmd(this));
        }catch (Exception ignored){}
 
-       new PlayerListener(this, this.brandUpdater).register();
+       new PlayerListener(this, brandUpdater).register();
        if (brandUpdater.size() > 0) brandUpdater.broadcast();
        if (brandUpdater.size() > 1) brandUpdater.start();
        NyatLib plugin = NyatLib.getPlugin(NyatLib.class);
@@ -88,9 +83,24 @@ public final class NyatLib extends JavaPlugin {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
-        if(brandUpdater != null){
-            brandUpdater.stop();
-        }
         NyatLibOnDisable.DisableStep();
+    }
+    public static void initial(){
+        NyatLibLogger.logINFO("==========================================================================================");
+        NyatLibLogger.logINFO("");
+        NyatLibLogger.logINFO("@@@@@@^    @@@@^                              =@@@@^    =@@@@^        @@@@@  =@@@@");
+        NyatLibLogger.logINFO("@@@@@@@\\   @@@@^                              =@@@@^    =@@@@^               =@@@@");
+        NyatLibLogger.logINFO("@@@@@@@@\\  @@@@^.@@@@\\    @@@@/ O@@@@@@@@@`  @@@@@@@@@@.=@@@@^        O@@@O  =@@@@/@@@@@@`");
+        NyatLibLogger.logINFO("@@@@^@@@@@.@@@@^ ,@@@@^  =@@@@. O@@[[[\\@@@@^ \\@@@@@@OOO.=@@@@^        O@@@O  =@@@@@@@@@@@@`");
+        NyatLibLogger.logINFO("@@@@^.@@@@@@@@@^  =@@@@`.@@@@^   .,]/@@@@@@@  =@@@@^    =@@@@^        O@@@O  =@@@@   .@@@@^");
+        NyatLibLogger.logINFO("@@@@^  \\@@@@@@@^   \\@@@@/@@@^  ,@@@@@@@@@@@@  =@@@@^    =@@@@^        O@@@O  =@@@@    @@@@O");
+        NyatLibLogger.logINFO("@@@@^   \\@@@@@@^   .@@@@@@@@   @@@@@   =@@@@  =@@@@^    =@@@@^        O@@@O  =@@@@   ,@@@@^");
+        NyatLibLogger.logINFO("@@@@^    =@@@@@^    ,@@@@@@.   =@@@@@@@@@@@@  .@@@@@@@@.=@@@@@@@@@@@O O@@@O  =@@@@@@@@@@@/");
+        NyatLibLogger.logINFO("@@@@^     =@@@@^     =@@@@^     ,@@@@@/=@@@@   .\\@@@@@@.=@@@@@@@@@@@O O@@@O  =@@@@\\@@@@/`");
+        NyatLibLogger.logINFO("                    ,@@@@/");
+        NyatLibLogger.logINFO("                   .@@@@@");
+        NyatLibLogger.logINFO("");
+        NyatLibLogger.logINFO("==========================================================================================");
+
     }
 }

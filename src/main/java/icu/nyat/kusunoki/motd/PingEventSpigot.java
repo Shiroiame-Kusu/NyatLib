@@ -8,11 +8,8 @@ import icu.nyat.kusunoki.motd.shared.StatusPingListener;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.server.ServerListPingEvent;
-import org.bukkit.util.CachedServerIcon;
-
 import java.net.InetSocketAddress;
 import java.util.Optional;
-import java.util.UUID;
 
 @Getter
 @RequiredArgsConstructor

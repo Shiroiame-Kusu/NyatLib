@@ -1,4 +1,4 @@
-package icu.nyat.kusunoki.packet;
+package icu.nyat.kusunoki.Packet;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.ListenerPriority;
@@ -9,7 +9,7 @@ import icu.nyat.kusunoki.NyatLibCore;
 
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.MinecraftKey;
-import icu.nyat.kusunoki.utils.NyatLibLogger;
+import icu.nyat.kusunoki.Utils.NyatLibLogger;
 import io.netty.buffer.ByteBuf;
 
 import java.nio.charset.StandardCharsets;

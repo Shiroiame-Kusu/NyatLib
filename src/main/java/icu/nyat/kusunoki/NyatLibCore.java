@@ -5,7 +5,7 @@ import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.injector.netty.WirePacket;
 
-import icu.nyat.kusunoki.utils.NyatLibLogger;
+import icu.nyat.kusunoki.Utils.NyatLibLogger;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 
@@ -45,13 +45,6 @@ public class NyatLibCore extends BukkitRunnable{
         this.brand = brand;
         this.period = period;
         this.manager = manager;
-        /*String serverVersion = String.valueOf(MinecraftVersion.getCurrentVersion());
-
-        NyatLibLogger.logINFO(serverVersion);
-        String[] versionParts = serverVersion.split(" ")[2].split("\\.");
-        int majorVersion = Integer.parseInt(versionParts[0]);
-        int minorVersion = Integer.parseInt(versionParts[1]);
-        int revision = Integer.parseInt(versionParts[2]);*/
         this.pdscl = Class.forName("net.minecraft.network.PacketDataSerializer");
         try{
             Class<?> class_PacketPlayOutCustomPayload = Class.forName("net.minecraft.network.protocol.game.PacketPlayOutCustomPayload");
