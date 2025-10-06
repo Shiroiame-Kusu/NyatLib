@@ -39,36 +39,48 @@ public final class NyatLib extends JavaPlugin {
 
    @Override
     public void onEnable(){
-       NyatLibOnEnable EnableStep = new NyatLibOnEnable();
        ConfigReader.Read(getConfig());
+
+       // Ensure ProtocolLib is installed and enabled before proceeding
+       if (!getServer().getPluginManager().isPluginEnabled("ProtocolLib")) {
+           NyatLibLogger.logERROR("ProtocolLib not found or not enabled. Disabling NyatLib.");
+           getServer().getPluginManager().disablePlugin(this);
+           return;
+       }
+
+       NyatLibOnEnable EnableStep = new NyatLibOnEnable();
        try {
            EnableStep.Check();
            NyatLibLogger.logINFO("§3Current NyatWork Version is: " + NyatLib.BrandVersion  + "§f");
        }catch(Exception e){
            NyatLibLogger.logERROR(e.toString());
            onDisable();
+           return;
        }
-       ProtocolManager manager = ProtocolLibrary.getProtocolManager();
 
        try{
            if(isBroadcastEnabled){
+               ProtocolManager manager = ProtocolLibrary.getProtocolManager();
                brandUpdater = new NyatLibCore(Collections.singletonList(BrandName + " " + BrandVersion + "§f"),100,manager);
+               // Register packet listener only when updater is available
+               manager.addPacketListener(new PacketListener(this));
            }
        } catch (Exception e) {
            NyatLibLogger.logERROR(e.getMessage());
            NyatLibLogger.logERROR(e.toString());
            e.printStackTrace();
            onDisable();
+           return;
        }
 
-       manager.addPacketListener(new PacketListener(this, brandUpdater));
-       try {
-           Objects.requireNonNull(this.getCommand("nlreload")).setExecutor(new ReloadCmd(this));
-       }catch (Exception ignored){}
+       // Register player listener only when broadcasting is enabled and updater is ready
+       if (brandUpdater != null) {
+           new PlayerListener(this, brandUpdater).register();
 
-       new PlayerListener(this, brandUpdater).register();
-       if (brandUpdater.size() > 0) brandUpdater.broadcast();
-       if (brandUpdater.size() > 1) brandUpdater.start();
+           if (brandUpdater.size() > 0) brandUpdater.broadcast();
+           if (brandUpdater.size() > 1) brandUpdater.start();
+       }
+
        NyatLib plugin = NyatLib.getPlugin(NyatLib.class);
        if (PaperLib.isPaper()) {
            getServer().getPluginManager().registerEvents(new PingEventPaper(plugin), this);
@@ -77,6 +89,9 @@ public final class NyatLib extends JavaPlugin {
            getServer().getPluginManager().registerEvents(new PingEventSpigot(plugin), this);
        }
 
+       try {
+           Objects.requireNonNull(this.getCommand("nlreload")).setExecutor(new ReloadCmd(this));
+       } catch (Exception ignored) {}
 
    }
 

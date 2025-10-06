@@ -1,0 +1,67 @@
+// Gradle build script for NyatLib (Gradle conversion)
+
+plugins {
+    id 'java'
+}
+
+group = 'icu.nyat.Kusunoki'
+version = '0.11.0-Beta.1'
+
+// Put all Gradle build outputs under 'target' to match Maven-style layout
+buildDir = 'target'
+
+// Configure compilation encoding and target release
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.compilerArgs += ['--release', '21']
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven { url 'https://maven.aliyun.com/repository/public' }
+    maven { url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
+    maven { url 'https://oss.sonatype.org/content/groups/public/' }
+    maven { url 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
+    maven { url 'https://repo.dmulloy2.net/repository/public/' }
+    maven { url 'https://papermc.io/repo/repository/maven-public/' }
+    maven { url 'https://repo.papermc.io/repository/maven-public/' }
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    compileOnly 'org.spigotmc:spigot-api:1.20.4-R0.1-SNAPSHOT'
+    compileOnly 'dev.folia:folia-api:1.20.1-R0.1-SNAPSHOT'
+    compileOnly 'com.comphenix.protocol:ProtocolLib:5.4.0-SNAPSHOT'
+    // Use a valid Netty artifact for compile-time types
+    compileOnly 'io.netty:netty-buffer:4.1.127.Final'
+    compileOnly 'org.jetbrains:annotations:13.0'
+    compileOnly 'org.bstats:bstats-bukkit:3.0.0'
+    compileOnly 'org.ow2.asm:asm-analysis:4.1'
+
+    // PaperLib should be embedded in the output jar
+    implementation 'io.papermc:paperlib:1.0.8'
+
+    // Lombok for JDK 21 compatibility
+    compileOnly 'org.projectlombok:lombok:1.18.34'
+    annotationProcessor 'org.projectlombok:lombok:1.18.34'
+}
+
+// Embed only implementation dependencies (PaperLib) into the jar
+jar {
+    // Place the jar at target/ rather than target/libs
+    destinationDirectory = layout.projectDirectory.dir('target')
+    // Avoid duplicate META-INF entries
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from({
+        configurations.runtimeClasspath.findAll { it.name.endsWith('.jar') }.collect { zipTree(it) }
+    }) {
+        exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/MANIFEST.MF'
+    }
+}
+
+processResources {
+    filesMatching('plugin.yml') {
+        expand(project: [version: project.version])
+    }
+}

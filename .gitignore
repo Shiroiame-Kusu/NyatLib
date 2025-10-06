@@ -1,23 +1,39 @@
-# User-specific stuff
+# IntelliJ IDEA
 .idea/
-
 *.iml
 *.ipr
 *.iws
 
-# IntelliJ
-out/
+# Build outputs (Gradle default and legacy Maven)
+.gradle/
+build/
+target/
 
-# Compiled class file
+# Keep Gradle wrapper JAR tracked
+!gradle/wrapper/gradle-wrapper.jar
+
+# Maven legacy artifacts/backups (safe to ignore even if not used)
+.mvn/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.flattened-pom.xml
+
+# Java
 *.class
 
-# Log file
+# Logs
 *.log
 
-# BlueJ files
-*.ctxt
+# Crash logs
+hs_err_pid*
+*.stackdump
 
-# Package Files #
+# Archives
 *.jar
 *.war
 *.nar
@@ -26,35 +42,18 @@ out/
 *.tar.gz
 *.rar
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
+# BlueJ
+*.ctxt
 
-*~
+# Common working dir
+run/
 
-# temporary files which can be created if a process still has a handle open of a deleted file
-.fuse_hidden*
-
-# KDE directory preferences
-.directory
-
-# Linux trash folder which might appear on any partition or disk
-.Trash-*
-
-# .nfs files are created when an open file is removed but is still being accessed
-.nfs*
-
-# General
+# macOS
 .DS_Store
 .AppleDouble
 .LSOverride
-
-# Icon must end with two \r
 Icon
-
-# Thumbnails
 ._*
-
-# Files that might appear in the root of a volume
 .DocumentRevisions-V100
 .fseventsd
 .Spotlight-V100
@@ -62,52 +61,23 @@ Icon
 .Trashes
 .VolumeIcon.icns
 .com.apple.timemachine.donotpresent
-
-# Directories potentially created on remote AFP share
 .AppleDB
 .AppleDesktop
 Network Trash Folder
 Temporary Items
 .apdisk
 
-# Windows thumbnail cache files
+# Windows
 Thumbs.db
 Thumbs.db:encryptable
 ehthumbs.db
 ehthumbs_vista.db
-
-# Dump file
-*.stackdump
-
-# Folder config file
-[Dd]esktop.ini
-
-# Recycle Bin used on file shares
 $RECYCLE.BIN/
-
-# Windows Installer files
-*.cab
-*.msi
-*.msix
-*.msm
-*.msp
-
-# Windows shortcuts
+[Dd]esktop.ini
 *.lnk
 
-target/
-
-pom.xml.tag
-pom.xml.releaseBackup
-pom.xml.versionsBackup
-pom.xml.next
-
-release.properties
-dependency-reduced-pom.xml
-buildNumber.properties
-.mvn/timing.properties
-.mvn/wrapper/maven-wrapper.jar
-.flattened-pom.xml
-
-# Common working directory
-run/
+# Linux
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*

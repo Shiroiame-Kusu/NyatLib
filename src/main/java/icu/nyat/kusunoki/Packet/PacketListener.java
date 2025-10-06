@@ -5,22 +5,18 @@ import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import icu.nyat.kusunoki.NyatLib;
-import icu.nyat.kusunoki.NyatLibCore;
 
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.MinecraftKey;
-import icu.nyat.kusunoki.Utils.NyatLibLogger;
 import io.netty.buffer.ByteBuf;
 
 import java.nio.charset.StandardCharsets;
 
 public class PacketListener extends PacketAdapter {
-    private final NyatLibCore updater;
     private String def = null;
 
-    public PacketListener(NyatLib plugin, NyatLibCore updater) {
+    public PacketListener(NyatLib plugin) {
         super(plugin, ListenerPriority.HIGHEST, PacketType.Play.Server.CUSTOM_PAYLOAD);
-        this.updater = updater;
     }
 
     // Don't remove it
@@ -36,9 +32,8 @@ public class PacketListener extends PacketAdapter {
 
         try {
             MinecraftKey channel = packet.getMinecraftKeys().read(0);
-            String AllChannel =  channel.getFullKey();
-            NyatLibLogger.logINFO(AllChannel);
-            if (channel.getFullKey().equals(NyatLib.BRAND)) {
+            String allChannel = channel.getFullKey();
+            if (allChannel.equals(NyatLib.BRAND)) {
                 event.setCancelled(true);
 
                 ByteBuf buf = ((ByteBuf) packet.getModifier().read(1));
@@ -46,7 +41,9 @@ public class PacketListener extends PacketAdapter {
                 if (def == null) def = name;
                 if (!def.equals(name)) return;
 
-                updater.send(event.getPlayer());
+                if (NyatLib.brandUpdater != null) {
+                    NyatLib.brandUpdater.send(event.getPlayer());
+                }
             }
         } catch (Throwable ignored) {
         }

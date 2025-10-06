@@ -18,12 +18,12 @@ public class NyatLibOnEnable {
         Logger.logINFO("§3Website: " + website);
         isProtocolLibInstalled = getServer().getPluginManager().isPluginEnabled("ProtocolLib");
         if(isProtocolLibInstalled){
-            String ProtocolLibVersionDescription = getServer().getPluginManager().getPlugin("ProtocolLib").toString();
-            String ProtocolLibVersion = ProtocolLibVersionDescription.substring(ProtocolLibVersionDescription.length() - 5);
-            if(ProtocolLibVersion.equals("5.3.0")){
-                Logger.logINFO("Seems that you have installed correct ProtocolLib version, continue...");
+            Plugin pl = getServer().getPluginManager().getPlugin("ProtocolLib");
+            String protocolLibVersion = pl != null ? pl.getDescription().getVersion() : "unknown";
+            if(protocolLibVersion.startsWith("5.3.") || protocolLibVersion.startsWith("5.4.")){
+                Logger.logINFO("ProtocolLib version " + protocolLibVersion + " detected; continuing...");
             }else{
-                Logger.logWARN("You are using an untested ProtocolLib version!");
+                Logger.logWARN("You are using an untested ProtocolLib version: " + protocolLibVersion);
             }
             Logger.logINFO("Check for network access......");
             try{
@@ -34,7 +34,7 @@ public class NyatLibOnEnable {
             }
 
         }else{
-            plugin.onDisable();
+            Logger.logWARN("ProtocolLib is not installed; certain features will be disabled.");
         }
 
     }
